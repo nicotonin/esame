@@ -4,5 +4,4 @@ export type User = {
     lastName: string;
     role:string;
     fullName?: string;
-    picture: string;
-}
+};

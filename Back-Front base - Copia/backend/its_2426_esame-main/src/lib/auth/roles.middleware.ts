@@ -1,28 +1,28 @@
 import { Request, Response, NextFunction } from 'express';
 
-export const isDipendente = async (
+export const isRole1 = async (
   req: Request,
   res: Response,
   next: NextFunction
-): Promise<void> => {
-  try {
-    if (!req.user || req.user.role !== 'dipendente') {
-     res.status(404).json({ message: "L'utente non è un dipendente " });
+  ): Promise<void> => {
+    try {
+      if (!req.user || req.user.role !== 'role1') {
+      res.status(404).json({ message: "L'utente non è un role1 " });
+      }
+      next();
+    } catch (error) {
+      next(error);
     }
-    next();
-  } catch (error) {
-    next(error);
-  }
 };
 
-export const isResponsabile = async (
+export const isRole2 = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
-    if (!req.user || req.user.role !== 'responsabile') {
-     res.status(404).json({ message: "L'utente non è un responsabile" });
+    if (!req.user || req.user.role !== 'role2') {
+     res.status(404).json({ message: "L'utente non è un role2" });
     }
     next();
   } catch (error) {
