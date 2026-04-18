@@ -1,14 +1,9 @@
-export interface RequestPermesso {
+export interface Request1 {
   id?: string;
-  dataRichiesta: Date;
   dataInizio: Date;
   dataFine: Date;
-  categoriaId: string;// FK CategoriaPermesso
-  motivazione: string;
+  categoriaId: string;// FK categoria
   stato: 'In attesa' | 'Approvato' | 'Rifiutato';
-  utenteId: string;// FK utente richiedente
-  utenteValutazioneId?: string;// FK responsabile che approva/rifiuta
-  dataValutazione?: Date;// data approvazione/rifiuto
-  createdAt?: Date;
-  updatedAt?: Date;
+  role1ID: string;// FK role1 (untente con meno accesso)
+  role2ID?: string;// FK role2
 }

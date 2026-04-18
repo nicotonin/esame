@@ -1,18 +1,18 @@
 import { Types } from "mongoose";
-import { RequestPermesso } from "./request.entity";
+import { Request1 } from "./request.entity";
 import { RequestModel } from "./request.model";
 
 export class RequestService {
 
   // CREA UNA NUOVA RICHIESTA
-  async createRequest(data: RequestPermesso) {
+  async createRequest(data: Request1) {
     const newRequest = await RequestModel.create(data);
     return newRequest;
   }
 
   // TROVA TUTTE LE RICHIESTE DI UN UTENTE
   async getRequestsByUser(userId: string) {
-    return await RequestModel.find({ utenteId: userId }).sort({ createdAt: -1 }).exec();
+    return await RequestModel.find({ role1ID: userId }).sort({ createdAt: -1 }).exec();
   }
 
   // TROVA TUTTE LE RICHIESTE CHE IL RESPONSABILE PUÒ VALUTARE
@@ -26,7 +26,7 @@ export class RequestService {
   }
 
   // AGGIORNA UNA RICHIESTA (PUT)
-  async updateRequest(id: string, updates: Partial<RequestPermesso>) {
+  async updateRequest(id: string, updates: Partial<Request1>) {
     const request = await RequestModel.findByIdAndUpdate(id, updates, { new: true });
     return request;
   }
@@ -37,8 +37,7 @@ export class RequestService {
     if (!request) return null;
 
     request.stato = stato;
-    request.utenteValutazioneId = valutatoreId;
-    request.dataValutazione = new Date();
+    request.role2ID = valutatoreId;
 
     await request.save();
     return request;
@@ -59,8 +58,7 @@ async approveRequest(id: string, valutatoreId: string) {
   if (!request) return null;
 
   request.stato = "Approvato";
-  request.utenteValutazioneId = valutatoreId;
-  request.dataValutazione = new Date();
+  request.role2ID = valutatoreId;
 
   await request.save();
   return request;
@@ -72,8 +70,7 @@ async rejectRequest(id: string, valutatoreId: string) {
   if (!request) return null;
 
   request.stato = "Rifiutato";
-  request.utenteValutazioneId = valutatoreId;
-  request.dataValutazione = new Date();
+  request.role2ID = valutatoreId;
 
   await request.save();
   return request;

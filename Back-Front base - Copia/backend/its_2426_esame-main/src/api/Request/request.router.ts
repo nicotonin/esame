@@ -13,14 +13,14 @@ import {
 const router = Router();
 
 
-router.get("/", getAllRequests);
-router.post("/", createRequest);
-router.get("/da-approvare", getRequestsToApprove); 
-router.get("/:id", getRequestById);
-router.put("/:id", updateRequestById);
-router.put("/:id/approva", approveRequest);
-router.put("/:id/rifiuta", rejectRequest);
-router.delete("/:id", deleteRequestById);
+router.get("/getAllRequests", getAllRequests);
+router.post("/createRequest", createRequest);
+router.get("/getRequestsToApprove", getRequestsToApprove); 
+router.get("/getRequestById/:id", getRequestById);
+router.put("/updateRequest/:id", updateRequestById);
+router.put("/approveRequest/:id", approveRequest);
+router.put("/rejectRequest/:id", rejectRequest);
+router.delete("/deleteRequest/:id", deleteRequestById);
 
 
 export default router;

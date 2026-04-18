@@ -1,17 +1,14 @@
 import { Schema, model } from "mongoose";
-import { RequestPermesso } from "./request.entity";
+import { Request1 } from "./request.entity";
 
-const requestSchema = new Schema<RequestPermesso>(
+const requestSchema = new Schema<Request1>(
   {
-    dataRichiesta: { type: Date, required: true, default: () => new Date() },
     dataInizio: { type: Date, required: true },
     dataFine: { type: Date, required: true },
     categoriaId: { type: String, required: true },
-    motivazione: { type: String, required: true },
     stato: { type: String, enum: ["In attesa", "Approvato", "Rifiutato"], default: "In attesa" },
-    utenteId: { type: String, required: true },
-    dataValutazione: { type: Date },
-    utenteValutazioneId: { type: String },
+    role1ID: { type: String, required: true },
+    role2ID: { type: String },
   },
   { timestamps: true }
 );
@@ -25,4 +22,4 @@ requestSchema.set("toJSON", {
   },
 });
 
-export const RequestModel = model<RequestPermesso>("RichiestaPermesso", requestSchema);
+export const RequestModel = model<Request1>("Request1", requestSchema);

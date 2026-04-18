@@ -10,10 +10,6 @@ export class CreateRequestDTO {
   @IsString()
   @IsNotEmpty()
   categoriaId: string;
-
-  @IsString()
-  @IsNotEmpty()
-  motivazione: string;
 }
 
 export class UpdateRequestDTO {
@@ -24,8 +20,4 @@ export class UpdateRequestDTO {
   @IsDateString()
   @IsOptional()
   dataFine?: string;
-
-  @IsString()
-  @IsOptional()
-  motivazione?: string;
 }
