@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { AuthService } from '..//service/auth.service';
+import { AuthService } from '../../service/auth.service';
 import { Router } from '@angular/router';
 import { Subject, catchError, takeUntil, throwError } from 'rxjs';
 
@@ -21,7 +21,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   registerForm = this.fb.group({
     firstName: ['', Validators.required],
     lastName: ['', Validators.required],
-    email: ['', Validators.required,Validators.email],
+    email: ['', [Validators.required, Validators.email]],
     password: ['', Validators.required],
     role: ['', Validators.required]
   });

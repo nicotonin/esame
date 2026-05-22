@@ -1,6 +1,6 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { AuthService } from '../service/auth.service';
+import { AuthService } from '../../service/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, map, Subject, takeUntil, throwError } from 'rxjs';
 
@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   private destroyed$ = new Subject<void>();
 
   loginForm = this.fb.group({
-    username: ['', Validators.required],
+    email: ['', Validators.required],
     password: ['', Validators.required]
   });
 
@@ -54,11 +54,11 @@ export class LoginComponent implements OnInit, OnDestroy {
   login() {
     if (this.loginForm.invalid) return;
 
-    const { username, password } = this.loginForm.value;
+    const { email, password } = this.loginForm.value;
 
     this.loading = true;
 
-    this.authSrv.login(username!, password!)
+    this.authSrv.login(email!, password!)
       .pipe(
         catchError(err => {
           this.loginError = err?.error?.message || 'Login error';
@@ -68,7 +68,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       )
       .subscribe(() => {
         this.loading = false;
-        this.router.navigate([this.requestedUrl ? this.requestedUrl : '']);
+        this.router.navigate([this.requestedUrl ? this.requestedUrl : '/home']);
       });
   }
 }

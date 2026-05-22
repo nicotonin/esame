@@ -38,8 +38,8 @@ export class AuthService {
                       );
 
 
-  login(username: string, password: string) {
-    return this.http.post<any>('/api/login', {username, password})
+  login(email: string, password: string) {
+    return this.http.post<any>('/api/login', {email, password})
       .pipe(
         tap(res => this.jwtSrv.setToken(res.token)),
         tap(res => this._currentUser$.next(res.user)),

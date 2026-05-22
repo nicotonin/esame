@@ -11,9 +11,6 @@ export class AddUserDTO {
     @Matches(/^[A-Za-z\s]+$/, { message: 'LastName must only contain letters and spaces' })
     lastName: string;
 
-    @IsUrl()
-    picture: string;
-
     @IsEmail()
     email: string;
 
