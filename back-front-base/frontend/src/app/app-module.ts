@@ -20,9 +20,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [
-    provideBrowserGlobalErrorListeners()
-  ],
+  providers: [provideBrowserGlobalErrorListeners()],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
