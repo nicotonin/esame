@@ -6,17 +6,18 @@ import { catchError, map, Subject, takeUntil, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-login',
-  standalone: false,
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrls: ['./login.component.css'],
+  standalone:false
 })
 export class LoginComponent implements OnInit, OnDestroy {
-  protected fb = inject(FormBuilder);
-  protected authSrv = inject(AuthService);
-  protected router = inject(Router);
-  protected activatedRoute = inject(ActivatedRoute);
 
-  protected destroyed$ = new Subject<void>();
+  private fb = inject(FormBuilder);
+  private authSrv = inject(AuthService);
+  private router = inject(Router);
+  private activatedRoute = inject(ActivatedRoute);
+
+  private destroyed$ = new Subject<void>();
 
   loginForm = this.fb.group({
     username: ['', Validators.required],
@@ -24,13 +25,14 @@ export class LoginComponent implements OnInit, OnDestroy {
   });
 
   loginError = '';
-
   requestedUrl: string | null = null;
+
+  loading = false;
 
   ngOnInit() {
     this.loginForm.valueChanges
       .pipe(takeUntil(this.destroyed$))
-      .subscribe(_ => {
+      .subscribe(() => {
         this.loginError = '';
       });
 
@@ -50,16 +52,23 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   login() {
+    if (this.loginForm.invalid) return;
+
     const { username, password } = this.loginForm.value;
+
+    this.loading = true;
+
     this.authSrv.login(username!, password!)
       .pipe(
-        catchError(response => {
-          this.loginError = response.error.message;
-          return throwError(() => response);
+        catchError(err => {
+          this.loginError = err?.error?.message || 'Login error';
+          this.loading = false;
+          return throwError(() => err);
         })
       )
       .subscribe(() => {
+        this.loading = false;
         this.router.navigate([this.requestedUrl ? this.requestedUrl : '']);
-      })
+      });
   }
 }

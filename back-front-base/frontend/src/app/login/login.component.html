@@ -1,31 +1,54 @@
-<div class="container mt-5">
-  <div class="row">
-    <div class="col col-lg-4"></div>
-    <div class="col col-lg-4 col-md-12 border rounded p-4">
-      <form (ngSubmit)="login()" [formGroup]="loginForm">
+<div class="page">
 
-        <div class="form-outline mb-4">
-          <label class="form-label">Email address</label>
-          <input type="email" class="form-control" formControlName="username" />
-        </div>
+  <div class="card">
 
+    <h1>Bentornato</h1>
+    <p class="subtitle">Accedi alla tua area riservata Prospettiva</p>
 
-        <div class="form-outline mb-4">
-          <label class="form-label">Password</label>
-          <input type="password" class="form-control" formControlName="password" />
-        </div>
-        <div class="text-danger" *ngIf="loginError">
-          {{ loginError }}
-        </div>
+    <form [formGroup]="loginForm" (ngSubmit)="login()">
 
+      <!-- EMAIL -->
+      <label>Email address</label>
+      <div class="input-box">
+        <span class="icon">✉</span>
+        <input type="email" formControlName="username" placeholder="nome@azienda.it">
+      </div>
 
-        <div class="text-center">
-          <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
-        </div>
-        <div>
-          <a [routerLink]="['/register']">non hai un account?</a>
-        </div>
-      </form>
+      <!-- PASSWORD -->
+      <label>Password</label>
+      <div class="input-box">
+        <span class="icon">🔒</span>
+        <input type="password" formControlName="password" placeholder="••••••••">
+      </div>
+
+      <!-- ERROR -->
+      <div class="error" *ngIf="loginError">
+        {{ loginError }}
+      </div>
+
+      <!-- ROW -->
+      <div class="row">
+        <label class="remember">
+          <input type="checkbox">
+          Ricordami
+        </label>
+
+        <a routerLink="/forgot-password">Password dimenticata?</a>
+      </div>
+
+      <!-- BUTTON -->
+      <button type="submit" [disabled]="loading">
+        <span *ngIf="!loading">Accedi →</span>
+        <span *ngIf="loading">Caricamento...</span>
+      </button>
+
+    </form>
+
+    <div class="footer">
+      Non hai un account?
+      <a [routerLink]="['/register']">Registrati</a>
     </div>
+
   </div>
+
 </div>
