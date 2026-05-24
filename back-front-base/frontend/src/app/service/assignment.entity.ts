@@ -1,5 +1,5 @@
 import { User } from "../entities/user.entity";
-import { Classroom } from "./classroom.entity";
+import { Category } from "./category.entity";
 
 export type Assignment = {
     id?: string;
@@ -9,7 +9,7 @@ export type Assignment = {
     completed?: boolean;
     createdAt: Date;
     createdBy: User|string;
-    classroomId?: Classroom|string;
+    categoryId?: Category|string;
     student?: { 
         studentId: string; 
         completed: boolean 

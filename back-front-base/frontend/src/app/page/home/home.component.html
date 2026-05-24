@@ -1,1 +1,22 @@
-<p>home works!</p>
+<div class="page">
+
+  <h1>Categorie</h1>
+  <p>Scegli una categoria per iniziare</p>
+
+  <div class="category-grid">
+
+    <div class="category-card" *ngFor="let c of categories$ | async">
+      
+      <div class="category-icon">
+        📁
+      </div>
+
+      <div class="category-desc">
+        {{ c.description || 'Nessuna descrizione' }}
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

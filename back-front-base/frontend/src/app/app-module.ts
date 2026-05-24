@@ -7,6 +7,9 @@ import { LoginComponent } from './page/login/login.component';
 import { RegisterComponent } from './page/register/register.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HomeComponent } from './page/home/home.component';
+import { logoutInterceptor } from './utils/logout.interceptor';
+import { authInterceptor } from './utils/auth.interceptor';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -22,7 +25,11 @@ import { HomeComponent } from './page/home/home.component';
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [],
+  providers: [
+    provideHttpClient(
+      withInterceptors([authInterceptor, logoutInterceptor])
+    )
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
