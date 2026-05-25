@@ -11,8 +11,8 @@ const userSchema = new Schema<User>({
 userSchema.set('toJSON', {
     virtuals: true,
     transform: (_, ret) => {
-        delete ret._id;
-        delete ret.__v;
+        delete (ret as unknown as any)._id;
+        delete (ret as unknown as any).__v;
         return ret;
     }
 });
@@ -20,8 +20,8 @@ userSchema.set('toJSON', {
 userSchema.set('toObject', {
     virtuals: true,
     transform: (_, ret) => {
-        delete ret._id;
-        delete ret.__v;
+        delete (ret as unknown as any)._id;
+        delete (ret as unknown as any).__v;
         return ret;
     }
 });

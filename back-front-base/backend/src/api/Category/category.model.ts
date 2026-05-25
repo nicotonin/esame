@@ -17,8 +17,8 @@ const categorySchema = new Schema<Category>(
 categorySchema.set('toJSON', {
   virtuals: true,
   transform: (_, ret) => {
-    delete ret._id;
-    delete ret.__v;
+  delete (ret as unknown as any)._id;
+  delete (ret as unknown as any).__v;
     delete ret.id;
     return ret;
   },

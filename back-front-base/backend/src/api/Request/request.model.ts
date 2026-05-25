@@ -16,8 +16,8 @@ const requestSchema = new Schema<Request1>(
 requestSchema.set("toJSON", {
   virtuals: true,
   transform: (_, ret) => {
-    delete ret._id;
-    delete ret.__v;
+    delete (ret as unknown as any)._id;
+    delete (ret as unknown as any).__v;
     return ret;
   },
 });

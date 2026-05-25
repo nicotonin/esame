@@ -7,11 +7,18 @@ require("reflect-metadata");
 const http_1 = require("http");
 const app_1 = __importDefault(require("./app"));
 const mongoose_1 = __importDefault(require("mongoose"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 mongoose_1.default.set('debug', true);
-mongoose_1.default.connect('mongodb://localhost:27017/its-simulazione-esame')
+const MONGO_URL = process.env.MONGO_URL;
+if (!MONGO_URL) {
+    throw new Error("MONGO_URL non definita");
+}
+mongoose_1.default.connect(MONGO_URL)
     .then(_ => {
-    (0, http_1.createServer)(app_1.default).listen(3000, () => {
-        console.log('Server listening on port 3000');
+    const PORT = process.env.PORT || 3000;
+    (0, http_1.createServer)(app_1.default).listen(PORT, () => {
+        console.log(`Server listening on port ${PORT}`);
     });
 })
     .catch(err => {
