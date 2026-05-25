@@ -4,6 +4,7 @@ import { BehaviorSubject, catchError, distinctUntilChanged, map, of, ReplaySubje
 import { JwtService } from './jwt.service';
 import { User } from '../entities/user.entity';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +40,7 @@ export class AuthService {
 
 
   login(email: string, password: string) {
-    return this.http.post<any>('/api/login', {email, password})
+    return this.http.post<any>(`${environment.apiUrl}/api/login`, {email, password})
       .pipe(
         tap(res => this.jwtSrv.setToken(res.token)),
         tap(res => this._currentUser$.next(res.user)),
@@ -48,7 +49,7 @@ export class AuthService {
   }
 
   register(user: {firstName: string;lastName: string;email: string;password: string;role: string;}) {
-  return this.http.post<User>('/api/register', user)
+  return this.http.post<User>(`${environment.apiUrl}/api/register`, user)
 }
 
 
