@@ -1,20 +1,28 @@
 <div class="page">
 
-  <h1>Categorie</h1>
-  <p>Scegli una categoria per iniziare</p>
+  <h1>Richieste</h1>
+  <p>Scegli una richiesta per iniziare</p>
+  <button class="btn btn-primary" (click)="openAdd()">
+      + Aggiungi richiesta
+  </button>
 
   <div class="category-grid">
 
-    <div class="category-card" *ngFor="let c of categories$ | async">
+    <div class="category-card" *ngFor="let r of request$ | async">
       
       <div class="category-icon">
         📁
       </div>
 
       <div class="category-desc">
-        {{ c.description || 'Nessuna descrizione' }}
+        {{ r.dataInizio || 'Nessuna descrizione' }}
       </div>
-
+      <div class="category-desc">
+        {{ r.dataFine || 'Nessuna descrizione' }}
+      </div>
+      <div class="category-desc">
+        {{ r.stato || 'Nessuna descrizione' }}
+      </div>
     </div>
 
   </div>

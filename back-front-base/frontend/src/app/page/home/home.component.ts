@@ -1,7 +1,10 @@
 import { Component, inject } from '@angular/core';
-import { of, switchMap } from 'rxjs';
+import { BehaviorSubject, catchError, of, switchMap } from 'rxjs';
 import { AuthService } from '../../service/auth.service';
 import { CategoryService } from '../../service/category.service';
+import { RequestService } from '../../service/request.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap/modal';
+import { AddRequestModal } from '../../components/add-request-modal/add-request-modal';
 
 @Component({
   selector: 'app-home',
@@ -11,14 +14,49 @@ import { CategoryService } from '../../service/category.service';
 })
 export class HomeComponent {
 
-  protected categoryService = inject(CategoryService);
+  protected requestService = inject(RequestService);
   protected authSrv = inject(AuthService);
 
-  categories$ = this.authSrv.isAuthenticated$.pipe(
+  private modalService = inject(NgbModal);
+
+  refresh$ = new BehaviorSubject<void>(undefined);
+
+
+   request$ = this.authSrv.isAuthenticated$.pipe(
+
     switchMap(isAuth => {
+
       if (!isAuth) return of([]);
 
-      return this.categoryService.list();
+      return this.refresh$.pipe(
+
+        switchMap(() =>
+          this.requestService.list().pipe(
+
+            catchError(err => {
+              console.error(err);
+              return of([]);
+            })
+
+          )
+        )
+
+      );
     })
   );
+
+  openAdd() {
+
+    const modalRef = this.modalService.open(AddRequestModal);
+
+    modalRef.result.then((result) => {
+
+      this.requestService.add(result).subscribe(() => {
+
+        this.refresh$.next();
+
+      });
+
+    }).catch(() => {});
+  }
 }

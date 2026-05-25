@@ -10,20 +10,22 @@ import { HomeComponent } from './page/home/home.component';
 import { logoutInterceptor } from './utils/logout.interceptor';
 import { authInterceptor } from './utils/auth.interceptor';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { AddRequestModal } from './components/add-request-modal/add-request-modal';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     RegisterComponent,
-    HomeComponent
+    HomeComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     NgbModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AddRequestModal
   ],
   providers: [
     provideHttpClient(
