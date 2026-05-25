@@ -12,6 +12,6 @@ export class CategoryService {
   protected http = inject(HttpClient);
 
   list() {
-    return this.http.get<Category[]>(`${environment.apiUrl}/api/category/listCategory`);
+    return this.http.get<Category[]>(`${environment.apiUrl}/category/listCategory`);
   }
 }
