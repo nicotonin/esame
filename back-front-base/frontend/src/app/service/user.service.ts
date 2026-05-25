@@ -2,8 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { User } from '../entities/user.entity';
 
-
-
 @Injectable({
   providedIn: 'root'
 })
