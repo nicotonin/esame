@@ -2,7 +2,7 @@ import { User } from "../entities/user.entity";
 import { Category } from "./category.entity";
 
 export type Request = {
-  id?: string;
+  id: string;
   dataInizio: Date;
   dataFine: Date;
   categoriaId: string;// FK categoria

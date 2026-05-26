@@ -10,7 +10,10 @@ import { HomeComponent } from './page/home/home.component';
 import { logoutInterceptor } from './utils/logout.interceptor';
 import { authInterceptor } from './utils/auth.interceptor';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { AddRequestModal } from './components/add-request-modal/add-request-modal';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { NavUserComponent } from './components/nav-user/nav-user.component';
+import { IfAuthenticatedDirective } from './utils/if-authenticated.directive';
+import { FooterComponent } from './components/footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -18,15 +21,17 @@ import { AddRequestModal } from './components/add-request-modal/add-request-moda
     LoginComponent,
     RegisterComponent,
     HomeComponent,
+    NavbarComponent,
+    NavUserComponent,
+    IfAuthenticatedDirective,
+    FooterComponent
   ],
   imports: [
-    
     BrowserModule,
     AppRoutingModule,
     NgbModule,
     FormsModule,
     ReactiveFormsModule,
-    AddRequestModal
   ],
   providers: [
     provideHttpClient(

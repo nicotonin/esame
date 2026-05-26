@@ -2,7 +2,8 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CategoryService } from '../../service/category.service';
 
 @Component({
   selector: 'app-add-request-modal',
@@ -48,17 +49,16 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
       </div>
 
       <div class="mb-3">
+    <label class="form-label">Categoria</label>
 
-        <label class="form-label">
-          Categoria ID
-        </label>
+    <select class="form-control" [(ngModel)]="categoriaId">
+      <option value="">-- Seleziona categoria --</option>
 
-        <input
-          type="text"
-          class="form-control"
-          [(ngModel)]="categoriaId">
-
-      </div>
+      <option *ngFor="let c of categories" [value]="c.id">
+        {{ c.name }}
+      </option>
+    </select>
+  </div>
 
     </div>
 
@@ -88,10 +88,18 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 export class AddRequestModal {
 
   activeModal = inject(NgbActiveModal);
+  categorySrv = inject(CategoryService);
 
   dataInizio = '';
   dataFine = '';
   categoriaId = '';
+  categories: any[] = [];
+
+   ngOnInit() {
+    this.categorySrv.list().subscribe(res => {
+      this.categories = res;
+    });
+  }
 
   add() {
 

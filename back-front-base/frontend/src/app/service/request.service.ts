@@ -18,5 +18,15 @@ export class RequestService {
     return this.http.post<Request>(`${environment.apiUrl}/requests/createRequest`, request);
   }
 
-  
+  delete(id: string) {
+    return this.http.delete(`${environment.apiUrl}/requests/deleteRequest/${id}`);
+  }
+
+  update(id: string, body: any) {
+    return this.http.put(`${environment.apiUrl}/requests/updateRequest/${id}`, body);
+  }
+
+  approveRequest(id: string) {
+    return this.http.put(`${environment.apiUrl}/requests/approveRequest/${id}`, {});
+  }
 }

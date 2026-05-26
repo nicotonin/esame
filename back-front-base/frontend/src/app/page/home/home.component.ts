@@ -1,9 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { BehaviorSubject, catchError, of, switchMap } from 'rxjs';
 import { AuthService } from '../../service/auth.service';
-import { CategoryService } from '../../service/category.service';
 import { RequestService } from '../../service/request.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap/modal';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AddRequestModal } from '../../components/add-request-modal/add-request-modal';
 
 @Component({
@@ -55,6 +54,42 @@ export class HomeComponent {
 
         this.refresh$.next();
 
+      });
+
+    }).catch(() => {});
+  }
+
+
+  deleteRequest(id: string) {
+
+    if (!confirm('Vuoi eliminare questa richiesta?')) return;
+
+    this.requestService.delete(id).subscribe(() => {
+      this.refresh$.next();
+    });
+  }
+
+
+  approveRequest(id: string) {
+
+    this.requestService.approveRequest(id).subscribe(() => {
+      this.refresh$.next();
+    });
+  }
+
+
+  editRequest(request: any) {
+
+    const modalRef = this.modalService.open(AddRequestModal);
+
+    modalRef.componentInstance.dataInizio = request.dataInizio;
+    modalRef.componentInstance.dataFine = request.dataFine;
+    modalRef.componentInstance.categoriaId = request.categoriaId;
+
+    modalRef.result.then(result => {
+
+      this.requestService.update(request.id, result).subscribe(() => {
+        this.refresh$.next();
       });
 
     }).catch(() => {});
