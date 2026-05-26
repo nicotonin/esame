@@ -1,8 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { NgbActiveModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CategoryService } from '../../service/category.service';
 
 @Component({
@@ -13,52 +13,42 @@ import { CategoryService } from '../../service/category.service';
   template: `
 
     <div class="modal-header">
-
-      <h4 class="modal-title">
-        Aggiungi richiesta
-      </h4>
-
+      <h4 class="modal-title">Aggiungi richiesta</h4>
     </div>
 
     <div class="modal-body">
 
+      <!-- DATA INIZIO -->
       <div class="mb-3">
-
-        <label class="form-label">
-          Data inizio
-        </label>
-
+        <label class="form-label">Data inizio</label>
         <input
           type="date"
           class="form-control"
           [(ngModel)]="dataInizio">
-
       </div>
 
+      <!-- DATA FINE -->
       <div class="mb-3">
-
-        <label class="form-label">
-          Data fine
-        </label>
-
+        <label class="form-label">Data fine</label>
         <input
           type="date"
           class="form-control"
           [(ngModel)]="dataFine">
-
       </div>
 
+      <!-- CATEGORIA -->
       <div class="mb-3">
-    <label class="form-label">Categoria</label>
+        <label class="form-label">Categoria</label>
 
-    <select class="form-control" [(ngModel)]="categoriaId">
-      <option value="">-- Seleziona categoria --</option>
+        <select class="form-control" [(ngModel)]="categoriaId">
+          <option value="">-- Seleziona categoria --</option>
 
-      <option *ngFor="let c of categories" [value]="c.id">
-        {{ c.name }}
-      </option>
-    </select>
-  </div>
+          <option *ngFor="let c of categories" [value]="c._id">
+            {{ c.description }}
+          </option>
+
+        </select>
+      </div>
 
     </div>
 
@@ -70,7 +60,6 @@ import { CategoryService } from '../../service/category.service';
         (click)="activeModal.dismiss()">
 
         Annulla
-
       </button>
 
       <button
@@ -79,13 +68,12 @@ import { CategoryService } from '../../service/category.service';
         (click)="add()">
 
         Conferma
-
       </button>
 
     </div>
   `
 })
-export class AddRequestModal {
+export class AddRequestModal implements OnInit {
 
   activeModal = inject(NgbActiveModal);
   categorySrv = inject(CategoryService);
@@ -93,22 +81,21 @@ export class AddRequestModal {
   dataInizio = '';
   dataFine = '';
   categoriaId = '';
+
   categories: any[] = [];
 
-   ngOnInit() {
+  ngOnInit() {
     this.categorySrv.list().subscribe(res => {
+      console.log('Categorie caricate:', res);
       this.categories = res;
     });
   }
 
   add() {
-
     this.activeModal.close({
-
       dataInizio: this.dataInizio,
       dataFine: this.dataFine,
       categoriaId: this.categoriaId
-
     });
   }
 }
