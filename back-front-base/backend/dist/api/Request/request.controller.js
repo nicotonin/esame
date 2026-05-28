@@ -130,13 +130,13 @@ const deleteRequestById = (req, res, next) => __awaiter(void 0, void 0, void 0, 
                     }
                     else {
                         // Soft delete per dipendente
-                        requestService.changeStatus(id, "Rifiutato", userId);
+                        requestService.deleteRequest(id);
                         res.status(200).json({ message: "Richiesta eliminata correttamente" });
                     }
                 }
                 else {
                     // Responsabile può cancellare qualsiasi richiesta
-                    requestService.changeStatus(id, "Rifiutato", userId);
+                    requestService.deleteRequest(id);
                     res.status(200).json({ message: "Richiesta eliminata correttamente" });
                 }
             }
