@@ -114,12 +114,12 @@ export const deleteRequestById = async (req: Request, res: Response, next: NextF
             res.status(400).json({ message: "Richiesta già valutata, impossibile eliminare" });
           } else {
             // Soft delete per dipendente
-            requestService.changeStatus(id, "Rifiutato", userId);
+            requestService.deleteRequest(id);
             res.status(200).json({ message: "Richiesta eliminata correttamente" });
           }
         } else {
           // Responsabile può cancellare qualsiasi richiesta
-          requestService.changeStatus(id, "Rifiutato", userId);
+          requestService.deleteRequest(id);
           res.status(200).json({ message: "Richiesta eliminata correttamente" });
         }
       }
