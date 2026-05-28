@@ -43,7 +43,7 @@ import { CategoryService } from '../../service/category.service';
         <select class="form-control" [(ngModel)]="categoriaId">
           <option value="">-- Seleziona categoria --</option>
 
-          <option *ngFor="let c of categories" [value]="c._id">
+          <option *ngFor="let c of categories" [value]="c.categoriaId">
             {{ c.description }}
           </option>
 
