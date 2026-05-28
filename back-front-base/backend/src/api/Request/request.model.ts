@@ -1,5 +1,6 @@
 import { Schema, model } from "mongoose";
 import { Request1 } from "./request.entity";
+import { ref } from "process";
 
 const requestSchema = new Schema<Request1>(
   {
@@ -7,8 +8,8 @@ const requestSchema = new Schema<Request1>(
     dataFine: { type: Date, required: true },
     categoriaId: { type: String, required: true },
     stato: { type: String, enum: ["In attesa", "Approvato", "Rifiutato"], default: "In attesa" },
-    role1ID: { type: String, required: true },
-    role2ID: { type: String },
+    role1ID: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    role2ID: { type: Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
 );

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Request } from './request.entity';
+import { Request } from '../entities/request.entity';
 import { environment } from '../../environments/environment';
 
 
