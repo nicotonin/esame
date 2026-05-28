@@ -12,17 +12,17 @@ export class RequestService {
 
   // TROVA TUTTE LE RICHIESTE DI UN UTENTE
   async getRequestsByUser(userId: string) {
-    return await RequestModel.find({ role1ID: userId }).sort({ createdAt: -1 }).exec();
+    return await RequestModel.find({ role1ID: userId }).populate('role1ID', 'firstName lastName').sort({ createdAt: -1 }).exec();
   }
 
   // TROVA TUTTE LE RICHIESTE CHE IL RESPONSABILE PUÒ VALUTARE
   async getRequestsForApproval(managerId: string) {
-    return await RequestModel.find().sort({ createdAt: -1 }).exec();
+    return await RequestModel.find().populate('role1ID', 'firstName lastName').sort({ createdAt: -1 }).exec();
   }
 
   // TROVA UNA RICHIESTA PER ID
   async getRequestById(id: string) {
-    return await RequestModel.findById(id).exec();
+    return await RequestModel.findById(id).populate('role1ID', 'firstName lastName').exec();
   }
 
   // AGGIORNA UNA RICHIESTA (PUT)

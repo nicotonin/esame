@@ -10,9 +10,11 @@
 
 
 
-   <div class="category-desc">
-    {{ r.role1ID.firstName }} {{ r.role1ID.lastName }}
+  <div class="category-desc">
+    <pre>{{ r | json }}</pre>
+     {{ r.role1ID.firstName }} {{ r.role1ID.lastName }}
   </div>
+
 
   <div class="category-desc">
     {{ r.dataInizio |date:"medium"}}
