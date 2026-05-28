@@ -62,12 +62,18 @@ export class HomeComponent {
 
   deleteRequest(id: string) {
 
-    if (!confirm('Vuoi eliminare questa richiesta?')) return;
+  if (!confirm('Vuoi eliminare questa richiesta?')) return;
 
-    this.requestService.delete(id).subscribe(() => {
+  this.requestService.delete(id).subscribe({
+    next: (res) => {
+      console.log('DELETE OK', res);
       this.refresh$.next();
-    });
-  }
+    },
+    error: (err) => {
+      console.error('DELETE ERROR', err);
+    }
+  });
+}
 
 
   approveRequest(id: string) {

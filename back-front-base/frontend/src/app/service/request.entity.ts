@@ -7,6 +7,8 @@ export type Request = {
   dataFine: Date;
   categoriaId: string;// FK categoria
   stato: 'In attesa' | 'Approvato' | 'Rifiutato';
-  role1ID: User;// FK role1 (untente con meno accesso)
-  role2ID: User;// FK role2
+  role1ID: string;// FK role1 (untente con meno accesso)
+  role2ID?: string;// FK role2
+  
+
 }
