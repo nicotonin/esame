@@ -24,7 +24,9 @@ import { CategoryService } from '../../service/category.service';
         <input
           type="date"
           class="form-control"
-          [(ngModel)]="dataInizio">
+          [(ngModel)]="dataInizio"
+          (ngModelChange)="onStartDateChange()"
+          [max]="dataFine || null">
       </div>
 
       <!-- DATA FINE -->
@@ -33,7 +35,14 @@ import { CategoryService } from '../../service/category.service';
         <input
           type="date"
           class="form-control"
-          [(ngModel)]="dataFine">
+          [(ngModel)]="dataFine"
+          (ngModelChange)="validateDates()"
+          [min]="dataInizio || null">
+      </div>
+
+      <!-- ERRORE -->
+      <div *ngIf="dateError" class="alert alert-danger py-1">
+        ⚠ La data di fine non può essere precedente alla data di inizio
       </div>
 
       <!-- CATEGORIA -->
@@ -65,7 +74,8 @@ import { CategoryService } from '../../service/category.service';
       <button
         type="button"
         class="btn btn-primary"
-        (click)="add()">
+        (click)="add()"
+        [disabled]="!isValid()">
 
         Conferma
       </button>
@@ -84,14 +94,55 @@ export class AddRequestModal implements OnInit {
 
   categories: any[] = [];
 
+  dateError = false;
+
   ngOnInit() {
+
     this.categorySrv.list().subscribe(res => {
-      console.log('Categorie caricate:', res);
       this.categories = res;
     });
+
+    this.dataInizio = this.formatDate(this.dataInizio);
+    this.dataFine = this.formatDate(this.dataFine);
+
+    this.validateDates();
+  }
+
+  // quando cambia data inizio aggiorniamo anche validazione
+  onStartDateChange() {
+    if (this.dataFine && this.dataFine < this.dataInizio) {
+      this.dataFine = '';
+    }
+    this.validateDates();
+  }
+
+  validateDates() {
+    if (!this.dataInizio || !this.dataFine) {
+      this.dateError = false;
+      return;
+    }
+
+    this.dateError =
+      new Date(this.dataFine) < new Date(this.dataInizio);
+  }
+
+  isValid(): boolean {
+    return (
+      !!this.dataInizio &&
+      !!this.dataFine &&
+      !!this.categoriaId &&
+      !this.dateError
+    );
+  }
+
+  private formatDate(value: string): string {
+    if (!value) return '';
+    return value.includes('T') ? value.split('T')[0] : value;
   }
 
   add() {
+    if (!this.isValid()) return;
+
     this.activeModal.close({
       dataInizio: this.dataInizio,
       dataFine: this.dataFine,

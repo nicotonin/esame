@@ -7,8 +7,8 @@ const requestSchema = new mongoose_1.Schema({
     dataFine: { type: Date, required: true },
     categoriaId: { type: String, required: true },
     stato: { type: String, enum: ["In attesa", "Approvato", "Rifiutato"], default: "In attesa" },
-    role1ID: { type: String, required: true },
-    role2ID: { type: String },
+    role1ID: { type: mongoose_1.Schema.Types.ObjectId, ref: "User", required: true },
+    role2ID: { type: mongoose_1.Schema.Types.ObjectId, ref: "User" },
 }, { timestamps: true });
 requestSchema.set("toJSON", {
     virtuals: true,

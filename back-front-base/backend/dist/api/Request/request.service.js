@@ -22,19 +22,19 @@ class RequestService {
     // TROVA TUTTE LE RICHIESTE DI UN UTENTE
     getRequestsByUser(userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield request_model_1.RequestModel.find({ role1ID: userId }).sort({ createdAt: -1 }).exec();
+            return yield request_model_1.RequestModel.find({ role1ID: userId }).populate('role1ID', 'firstName lastName').sort({ createdAt: -1 }).exec();
         });
     }
     // TROVA TUTTE LE RICHIESTE CHE IL RESPONSABILE PUÒ VALUTARE
     getRequestsForApproval(managerId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield request_model_1.RequestModel.find().sort({ createdAt: -1 }).exec();
+            return yield request_model_1.RequestModel.find().populate('role1ID', 'firstName lastName').sort({ createdAt: -1 }).exec();
         });
     }
     // TROVA UNA RICHIESTA PER ID
     getRequestById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield request_model_1.RequestModel.findById(id).exec();
+            return yield request_model_1.RequestModel.findById(id).populate('role1ID', 'firstName lastName').exec();
         });
     }
     // AGGIORNA UNA RICHIESTA (PUT)
