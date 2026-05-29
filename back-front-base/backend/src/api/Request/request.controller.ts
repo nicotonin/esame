@@ -119,31 +119,26 @@ export const deleteRequestById = async (req: Request, res: Response, next: NextF
     }
 
    // ROLE1 può cancellare solo la sua
-console.log("REQUEST ROLE1ID:", request.role1ID);
-console.log("REQUEST ROLE1ID TYPE:", typeof request.role1ID);
+console.log("role1ID:", request.role1ID);
+console.log("userId:", userId);
 
-console.log("USER ID:", userId);
-console.log("USER ID TYPE:", typeof userId);
+const ownerId =
+  typeof request.role1ID === "object"
+    ? request.role1ID.id
+    : request.role1ID;
 
-console.log(
-  "COMPARE:",
-  request.role1ID.toString(),
-  "===",
-  userId
-);
+console.log("OWNER ID NORMALIZZATO:", ownerId);
 
-if (request.role1ID.toString() !== userId) {
+if (ownerId !== userId) {
 
-  console.log("❌ BLOCCATO: IDS DIVERSI");
+  console.log("❌ BLOCCATO: NON OWNER");
 
-  res.status(403).json({
+   res.status(403).json({
     message: "Non autorizzato"
   });
-
-  return;
 }
 
-console.log("✅ AUTORIZZATO DELETE");
+console.log("✅ OK DELETE AUTORIZZATA");
 
     if (request.stato !== "In attesa") {
       res.status(400).json({ message: "Richiesta già valutata, impossibile eliminare" });

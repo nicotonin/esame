@@ -127,10 +127,19 @@ const deleteRequestById = (req, res, next) => __awaiter(void 0, void 0, void 0, 
             return;
         }
         // ROLE1 può cancellare solo la sua
+        console.log("REQUEST ROLE1ID:", request.role1ID);
+        console.log("REQUEST ROLE1ID TYPE:", typeof request.role1ID);
+        console.log("USER ID:", userId);
+        console.log("USER ID TYPE:", typeof userId);
+        console.log("COMPARE:", request.role1ID.toString(), "===", userId);
         if (request.role1ID.toString() !== userId) {
-            res.status(403).json({ message: "Non autorizzato" });
+            console.log("❌ BLOCCATO: IDS DIVERSI");
+            res.status(403).json({
+                message: "Non autorizzato"
+            });
             return;
         }
+        console.log("✅ AUTORIZZATO DELETE");
         if (request.stato !== "In attesa") {
             res.status(400).json({ message: "Richiesta già valutata, impossibile eliminare" });
             return;

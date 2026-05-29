@@ -21,9 +21,9 @@ export class RequestService {
   }
 
   // TROVA UNA RICHIESTA PER ID
-  async getRequestById(id: string) {
-    return await RequestModel.findById(id).populate('role1ID', 'firstName lastName').exec();
-  }
+async getRequestById(id: string) {
+  return await RequestModel.findById(id).exec(); // NO POPULATE
+}
 
   // AGGIORNA UNA RICHIESTA (PUT)
   async updateRequest(id: string, updates: Partial<Request1>) {
