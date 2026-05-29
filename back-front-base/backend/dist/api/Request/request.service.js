@@ -34,7 +34,7 @@ class RequestService {
     // TROVA UNA RICHIESTA PER ID
     getRequestById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield request_model_1.RequestModel.findById(id).populate('role1ID', 'firstName lastName').exec();
+            return yield request_model_1.RequestModel.findById(id).exec(); // NO POPULATE
         });
     }
     // AGGIORNA UNA RICHIESTA (PUT)

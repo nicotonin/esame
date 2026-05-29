@@ -81,20 +81,30 @@ const createRequest = (req, res, next) => __awaiter(void 0, void 0, void 0, func
 });
 exports.createRequest = createRequest;
 // -----------------------------------
-// PUT /api/updateRequest/:id → modifica richiesta (solo role1 puo modificarela richiesta e solo se è in attesa)
 const updateRequestById = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
         const { id } = req.params;
         const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
         const updates = req.body;
-        const request = yield requestService.updateRequest(id, {});
-        if (!request)
+        if (!userId) {
+            res.status(401).json({ message: "Utente non autenticato" });
+        }
+        const request = yield requestService.getRequestById(id);
+        if (!request) {
             res.status(404).json({ message: "Richiesta non trovata" });
-        if ((request === null || request === void 0 ? void 0 : request.role1ID) !== userId)
+        }
+        // 🔵 solo owner
+        const isOwner = request.role1ID.toString() === userId;
+        if (!isOwner) {
             res.status(403).json({ message: "Non autorizzato" });
-        if ((request === null || request === void 0 ? void 0 : request.stato) !== "In attesa")
-            res.status(400).json({ message: "Richiesta già valutata, impossibile modificare" });
+        }
+        // 🔵 solo se in attesa
+        if (request.stato !== "In attesa") {
+            res.status(400).json({
+                message: "Richiesta già valutata, impossibile modificare"
+            });
+        }
         const updatedRequest = yield requestService.updateRequest(id, updates);
         res.status(200).json(updatedRequest);
     }
@@ -113,39 +123,30 @@ const deleteRequestById = (req, res, next) => __awaiter(void 0, void 0, void 0, 
         const role = (_b = req.user) === null || _b === void 0 ? void 0 : _b.role;
         if (!userId || !role) {
             res.status(401).json({ message: "Utente non autenticato" });
-            return;
         }
         const request = yield requestService.getRequestById(id);
         if (!request) {
             res.status(404).json({ message: "Richiesta non trovata" });
-            return;
         }
-        // ROLE2 può cancellare tutto
+        // 🟢 ROLE2 → può eliminare tutto
         if (role === "role2") {
             yield requestService.deleteRequest(id);
             res.status(200).json({ message: "Richiesta eliminata correttamente" });
-            return;
         }
-        // ROLE1 può cancellare solo la sua
-        console.log("REQUEST ROLE1ID:", request.role1ID);
-        console.log("REQUEST ROLE1ID TYPE:", typeof request.role1ID);
-        console.log("USER ID:", userId);
-        console.log("USER ID TYPE:", typeof userId);
-        console.log("COMPARE:", request.role1ID.toString(), "===", userId);
-        if (request.role1ID.toString() !== userId) {
-            console.log("❌ BLOCCATO: IDS DIVERSI");
-            res.status(403).json({
-                message: "Non autorizzato"
-            });
-            return;
+        // 🔵 ROLE1 → solo proprie e solo IN ATTESA
+        const isOwner = request.role1ID.toString() === userId;
+        if (!isOwner) {
+            res.status(403).json({ message: "Non autorizzato" });
         }
-        console.log("✅ AUTORIZZATO DELETE");
         if (request.stato !== "In attesa") {
-            res.status(400).json({ message: "Richiesta già valutata, impossibile eliminare" });
-            return;
+            res.status(400).json({
+                message: "Puoi eliminare solo richieste in attesa"
+            });
         }
         yield requestService.deleteRequest(id);
-        res.status(200).json({ message: "Richiesta eliminata correttamente" });
+        res.status(200).json({
+            message: "Richiesta eliminata correttamente"
+        });
     }
     catch (err) {
         next(err);
