@@ -101,29 +101,37 @@ export const deleteRequestById = async (req: Request, res: Response, next: NextF
 
     if (!userId || !role) {
       res.status(401).json({ message: "Utente non autenticato" });
-    } else {
-      const request = await requestService.getRequestById(id);
-      if (!request) {
-        res.status(404).json({ message: "Richiesta non trovata" });
-      } else {
-        // Controlli per role1
-        if (role !== "role2") {
-          if (request.role1ID !== userId) {
-            res.status(403).json({ message: "Non autorizzato" });
-          } else if (request.stato !== "In attesa") {
-            res.status(400).json({ message: "Richiesta già valutata, impossibile eliminare" });
-          } else {
-            // Soft delete per dipendente
-            requestService.deleteRequest(id);
-            res.status(200).json({ message: "Richiesta eliminata correttamente" });
-          }
-        } else {
-          // Responsabile può cancellare qualsiasi richiesta
-          requestService.deleteRequest(id);
-          res.status(200).json({ message: "Richiesta eliminata correttamente" });
-        }
-      }
+      return;
     }
+
+    const request = await requestService.getRequestById(id);
+
+    if (!request) {
+      res.status(404).json({ message: "Richiesta non trovata" });
+      return;
+    }
+
+    // ROLE2 può cancellare tutto
+    if (role === "role2") {
+      await requestService.deleteRequest(id);
+      res.status(200).json({ message: "Richiesta eliminata correttamente" });
+      return;
+    }
+
+    // ROLE1 può cancellare solo la sua
+    if (request.role1ID.toString() !== userId) {
+      res.status(403).json({ message: "Non autorizzato" });
+      return;
+    }
+
+    if (request.stato !== "In attesa") {
+      res.status(400).json({ message: "Richiesta già valutata, impossibile eliminare" });
+      return;
+    }
+
+    await requestService.deleteRequest(id);
+
+    res.status(200).json({ message: "Richiesta eliminata correttamente" });
   } catch (err) {
     next(err);
   }
