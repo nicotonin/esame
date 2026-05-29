@@ -72,20 +72,41 @@ export const createRequest = async (req: Request, res: Response, next: NextFunct
 };
 
 // -----------------------------------
-// PUT /api/updateRequest/:id → modifica richiesta (solo role1 puo modificarela richiesta e solo se è in attesa)
-export const updateRequestById = async (req: Request, res: Response, next: NextFunction): Promise<void> =>{
+export const updateRequestById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
+
     const { id } = req.params;
     const userId = req.user?.id;
     const updates = req.body;
 
-    const request = await requestService.updateRequest(id, {});
-    if (!request) res.status(404).json({ message: "Richiesta non trovata" });
-    if (request?.role1ID !== userId)  res.status(403).json({ message: "Non autorizzato" });
-    if (request?.stato !== "In attesa") res.status(400).json({ message: "Richiesta già valutata, impossibile modificare" });
+    if (!userId) {
+       res.status(401).json({ message: "Utente non autenticato" });
+    }
+
+    const request = await requestService.getRequestById(id);
+
+    if (!request) {
+      res.status(404).json({ message: "Richiesta non trovata" });
+    }
+
+    // 🔵 solo owner
+    const isOwner = request!.role1ID.toString() === userId;
+
+    if (!isOwner) {
+       res.status(403).json({ message: "Non autorizzato" });
+    }
+
+    // 🔵 solo se in attesa
+    if (request!.stato !== "In attesa") {
+       res.status(400).json({
+        message: "Richiesta già valutata, impossibile modificare"
+      });
+    }
 
     const updatedRequest = await requestService.updateRequest(id, updates);
-    res.status(200).json(updatedRequest);
+
+     res.status(200).json(updatedRequest);
+
   } catch (err) {
     next(err);
   }
@@ -100,54 +121,40 @@ export const deleteRequestById = async (req: Request, res: Response, next: NextF
     const role = req.user?.role;
 
     if (!userId || !role) {
-      res.status(401).json({ message: "Utente non autenticato" });
-      return;
+     res.status(401).json({ message: "Utente non autenticato" });
     }
 
     const request = await requestService.getRequestById(id);
 
     if (!request) {
-      res.status(404).json({ message: "Richiesta non trovata" });
-      return;
+     res.status(404).json({ message: "Richiesta non trovata" });
     }
 
-    // ROLE2 può cancellare tutto
+    // 🟢 ROLE2 → può eliminare tutto
     if (role === "role2") {
       await requestService.deleteRequest(id);
       res.status(200).json({ message: "Richiesta eliminata correttamente" });
-      return;
     }
 
-   // ROLE1 può cancellare solo la sua
-console.log("role1ID:", request.role1ID);
-console.log("userId:", userId);
+    // 🔵 ROLE1 → solo proprie e solo IN ATTESA
+    const isOwner = request!.role1ID.toString() === userId;
 
-const ownerId =
-  typeof request.role1ID === "object"
-    ? request.role1ID.id
-    : request.role1ID;
+    if (!isOwner) {
+      res.status(403).json({ message: "Non autorizzato" });
+    }
 
-console.log("OWNER ID NORMALIZZATO:", ownerId);
-
-if (ownerId !== userId) {
-
-  console.log("❌ BLOCCATO: NON OWNER");
-
-   res.status(403).json({
-    message: "Non autorizzato"
-  });
-}
-
-console.log("✅ OK DELETE AUTORIZZATA");
-
-    if (request.stato !== "In attesa") {
-      res.status(400).json({ message: "Richiesta già valutata, impossibile eliminare" });
-      return;
+    if (request!.stato !== "In attesa") {
+      res.status(400).json({
+        message: "Puoi eliminare solo richieste in attesa"
+      });
     }
 
     await requestService.deleteRequest(id);
 
-    res.status(200).json({ message: "Richiesta eliminata correttamente" });
+     res.status(200).json({
+      message: "Richiesta eliminata correttamente"
+    });
+
   } catch (err) {
     next(err);
   }
